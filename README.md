@@ -78,10 +78,25 @@ uv run python src/eval/run_med_agent_eval.py --split test --limit 5 --offset 0
 
 The script prints:
 
-- gold answer option
-- predicted answer option
-- correctness
-- latency per question
-- total accuracy
-- invalid response rate
-- latency summary
+```
+# uv run python src/eval/run_med_agent_eval.py --split test --limit 5 --offset 0
+
+[1/5] gold=B pred=B correct=True latency=7.48s
+[2/5] gold=D pred=D correct=True latency=4.33s
+[3/5] gold=B pred=B correct=True latency=3.44s
+[4/5] gold=D pred=A correct=False latency=18.38s
+[5/5] gold=B pred=B correct=True latency=4.42s
+
+Sprint 1 Medical Reasoning Agent Evaluation
+split=test
+offset=0
+limit=5
+total=5
+correct=4
+invalid=0
+accuracy=0.8000
+invalid_response_rate=0.0000
+latency_avg_seconds=7.61
+latency_min_seconds=3.44
+latency_max_seconds=18.38
+```
