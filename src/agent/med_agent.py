@@ -9,7 +9,7 @@ from typing import Any
 from llama_index.llms.openrouter import OpenRouter
 
 from src.core.config import LLMConfig, load_llm_1_config
-from src.core.schema import AgentPrediction, MedQAExample, VALID_CHOICES
+from src.core.schema import AgentPrediction, MedQAExample, VALID_CHOICES, normalize_choice
 
 
 SYSTEM_INSTRUCTIONS = """You are a careful medical exam reasoning assistant.
@@ -49,9 +49,7 @@ class MedicalReasoningAgent:
         return self._parse_prediction(raw_response, example)
 
     def _build_prompt(self, example: MedQAExample) -> str:
-        options = "\n".join(
-            f"{choice}. {example.options[choice]}" for choice in sorted(VALID_CHOICES)
-        )
+        options = "\n".join(_format_options(example.options))
         return f"""Question:
 {example.question}
 
@@ -73,7 +71,7 @@ Return only JSON in this exact shape:
     ) -> AgentPrediction:
         try:
             payload = _extract_json_object(raw_response)
-            answer_idx = str(payload.get("answer_idx", "")).strip().upper()
+            answer_idx = normalize_choice(payload.get("answer_idx"))
             if answer_idx not in VALID_CHOICES:
                 raise ValueError(f"Invalid answer_idx: {answer_idx!r}")
 
@@ -120,3 +118,9 @@ def _clean_text(value: Any) -> str:
     if value is None:
         return ""
     return str(value).strip()
+
+
+def _format_options(options: dict[str, str]) -> list[str]:
+    ordered_keys = [choice for choice in sorted(VALID_CHOICES) if choice in options]
+    ordered_keys.extend(key for key in sorted(options) if key not in VALID_CHOICES)
+    return [f"{choice}. {options[choice]}" for choice in ordered_keys]

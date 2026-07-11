@@ -1,59 +1,64 @@
-"""Shared data structures for MedQA examples and agent predictions."""
+"""Lightweight data containers shared by the agent and evaluator."""
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from dataclasses import dataclass, field
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
-AnswerChoice = Literal["A", "B", "C", "D"]
 VALID_CHOICES = {"A", "B", "C", "D"}
 
 
-class MedQAExample(BaseModel):
-    model_config = ConfigDict(extra="allow")
-
+@dataclass
+class MedQAExample:
     question: str
     options: dict[str, str]
     answer: str | None = None
-    answer_idx: AnswerChoice | None = None
+    answer_idx: str | None = None
     meta_info: str | None = None
-    metamap_phrases: list[str] = Field(default_factory=list)
+    metamap_phrases: list[str] = field(default_factory=list)
+    extra: dict[str, Any] = field(default_factory=dict)
 
-    @field_validator("options")
     @classmethod
-    def validate_options(cls, options: dict[str, str]) -> dict[str, str]:
-        normalized = {str(key).upper(): str(value) for key, value in options.items()}
-        missing = VALID_CHOICES.difference(normalized)
-        if missing:
-            raise ValueError(f"Missing answer options: {sorted(missing)}")
-        return {choice: normalized[choice] for choice in sorted(VALID_CHOICES)}
+    def from_dict(cls, data: dict[str, Any]) -> "MedQAExample":
+        known_fields = {
+            "question",
+            "options",
+            "answer",
+            "answer_idx",
+            "meta_info",
+            "metamap_phrases",
+        }
+        options = data.get("options") or {}
+        return cls(
+            question=str(data.get("question", "")).strip(),
+            options={str(key).upper(): str(value) for key, value in options.items()},
+            answer=_optional_str(data.get("answer")),
+            answer_idx=normalize_choice(data.get("answer_idx")),
+            meta_info=_optional_str(data.get("meta_info")),
+            metamap_phrases=list(data.get("metamap_phrases") or []),
+            extra={key: value for key, value in data.items() if key not in known_fields},
+        )
 
-    @field_validator("answer_idx", mode="before")
-    @classmethod
-    def normalize_answer_idx(cls, answer_idx: Any) -> str | None:
-        if answer_idx is None:
-            return None
-        normalized = str(answer_idx).strip().upper()
-        if normalized not in VALID_CHOICES:
-            raise ValueError(f"Invalid answer_idx: {answer_idx}")
-        return normalized
 
-
-class AgentPrediction(BaseModel):
-    answer_idx: AnswerChoice | None
+@dataclass
+class AgentPrediction:
+    answer_idx: str | None
     answer: str | None = None
     explanation: str = ""
     raw_response: str | None = None
     is_valid: bool = True
     error: str | None = None
 
-    @field_validator("answer_idx", mode="before")
-    @classmethod
-    def normalize_answer_idx(cls, answer_idx: Any) -> str | None:
-        if answer_idx is None:
-            return None
-        normalized = str(answer_idx).strip().upper()
-        if normalized not in VALID_CHOICES:
-            raise ValueError(f"Invalid answer_idx: {answer_idx}")
-        return normalized
+
+def normalize_choice(value: Any) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip().upper()
+    return normalized if normalized else None
+
+
+def _optional_str(value: Any) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None

@@ -8,9 +8,14 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 
 
-DEFAULT_OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
-DEFAULT_LLM_1_MODEL = "deepseek/deepseek-v4-flash"
+DEFAULT_LLM_1_MODEL= "deepseek/deepseek-v4-flash"
+DEFAULT_LLM_1_API_BASE= "https://openrouter.ai/api/v1"
 
+DEFAULT_LLM_2_MODEL= "cx/gpt-5.4-mini"
+DEFAULT_LLM_2_API_BASE= "http://localhost:20128/v1"
+
+DEFAULT_LLM_3_MODEL= "deepseek/deepseek-v4-flash"
+DEFAULT_LLM_3_API_BASE= "https://openrouter.ai/api/v1"
 
 @dataclass(frozen=True)
 class LLMConfig:
@@ -22,7 +27,7 @@ class LLMConfig:
 
 
 def load_llm_1_config() -> LLMConfig:
-    """Load the primary LLM config used by Sprint 1."""
+    """Load the config of LLM 1."""
 
     load_dotenv()
 
@@ -32,6 +37,38 @@ def load_llm_1_config() -> LLMConfig:
 
     return LLMConfig(
         model=os.getenv("LLM_1_MODEL", DEFAULT_LLM_1_MODEL).strip(),
-        api_base=os.getenv("LLM_1_API_BASE", DEFAULT_OPENROUTER_BASE_URL).strip(),
+        api_base=os.getenv("LLM_1_API_BASE", DEFAULT_LLM_1_API_BASE).strip(),
+        api_key=api_key,
+    )
+
+
+def load_llm_2_config() -> LLMConfig:
+    """Load the config of LLM 2."""
+
+    load_dotenv()
+
+    api_key = os.getenv("LLM_2_API_KEY", "").strip()
+    if not api_key:
+        raise ValueError("Missing required environment variable: LLM_2_API_KEY")
+
+    return LLMConfig(
+        model=os.getenv("LLM_2_MODEL", DEFAULT_LLM_2_MODEL).strip(),
+        api_base=os.getenv("LLM_2_API_BASE", DEFAULT_LLM_2_API_BASE).strip(),
+        api_key=api_key,
+    )
+
+
+def load_llm_3_config() -> LLMConfig:
+    """Load the config of LLM 3."""
+
+    load_dotenv()
+
+    api_key = os.getenv("LLM_3_API_KEY", "").strip()
+    if not api_key:
+        raise ValueError("Missing required environment variable: LLM_3_API_KEY")
+
+    return LLMConfig(
+        model=os.getenv("LLM_3_MODEL", DEFAULT_LLM_3_MODEL).strip(),
+        api_base=os.getenv("LLM_3_API_BASE", DEFAULT_LLM_3_API_BASE).strip(),
         api_key=api_key,
     )

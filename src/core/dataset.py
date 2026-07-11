@@ -30,7 +30,7 @@ def iter_jsonl_examples(path: Path) -> Iterable[MedQAExample]:
             if not stripped:
                 continue
             try:
-                yield MedQAExample.model_validate(json.loads(stripped))
+                yield MedQAExample.from_dict(json.loads(stripped))
             except Exception as exc:
                 raise ValueError(f"Failed to parse {path}:{line_number}") from exc
 
@@ -44,11 +44,7 @@ def load_medqa_split(
     path = get_split_path(split)
     if not path.exists():
         raise FileNotFoundError(f"Dataset split file not found: {path}")
-    if offset < 0:
-        raise ValueError("offset must be >= 0")
-    if limit is not None and limit < 0:
-        raise ValueError("limit must be >= 0")
-
+        
     examples: list[MedQAExample] = []
     for index, example in enumerate(iter_jsonl_examples(path)):
         if index < offset:
