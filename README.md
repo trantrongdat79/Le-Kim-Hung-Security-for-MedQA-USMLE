@@ -67,9 +67,19 @@ Run a quick dataset loading check:
 uv run python -c "from src.core.dataset import load_medqa_split; print(load_medqa_split('train', limit=1)[0])"
 ```
 
-## 5. Run Sprint 1 Evaluation
+For the Sprint 2 RAG corpus, download the MedRAG textbooks dataset into
+`data/corpus/medrag_textbooks/`:
 
-Run the Medical Reasoning Agent on a small train subset:
+```bash
+uv run python scripts/download_medrag_textbooks.py
+```
+
+This writes `data/corpus/medrag_textbooks/textbooks.jsonl` and
+`data/corpus/medrag_textbooks/metadata.json`. 
+
+## 5. Run Sprint 1 Evaluation (LLM + Prompt)
+
+Run the Medical Reasoning Agent on a small data subset:
 
 ```bash
 uv run python src/eval/run_med_agent_eval.py --split train --limit 10 --offset 0
@@ -99,4 +109,32 @@ invalid_response_rate=0.0000
 latency_avg_seconds=7.61
 latency_min_seconds=3.44
 latency_max_seconds=18.38
+```
+
+## 6. Run Sprint 2 Evaluation (RAG)
+
+Run data ingestion into chromadb (might take 4-8 hours):
+```bash
+uv run python src/retrieval/ingest_data.py
+```
+
+Run the Sprint 2 RAG agent on a small data subset:
+
+```bash
+uv run python src/eval/run_rag_eval.py --split test --limit 5 --offset 0 --top-k 5
+uv run python src/eval/run_med_agent_eval.py --split test --limit 5 --offset 0
+```
+
+## 7. Run Sprint 3 Evaluation (LangGraph RAG Workflow)
+
+Run the LangGraph-orchestrated RAG workflow on a small data subset:
+
+```bash
+uv run python src/eval/run_langgraph_rag_eval.py --split test --limit 5 --offset 0 --top-k 5
+```
+
+Compare it with the Sprint 2 RAG agent on the same subset:
+
+```bash
+uv run python src/eval/run_rag_eval.py --split test --limit 5 --offset 0 --top-k 5
 ```

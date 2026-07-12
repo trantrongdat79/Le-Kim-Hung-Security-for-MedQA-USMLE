@@ -50,6 +50,15 @@ class AgentPrediction:
     error: str | None = None
 
 
+@dataclass
+class EvidenceChunk:
+    text: str
+    title: str | None = None
+    source: str | None = None
+    chunk_id: str | None = None
+    score: float | None = None
+
+
 def normalize_choice(value: Any) -> str | None:
     if value is None:
         return None

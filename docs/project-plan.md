@@ -101,5 +101,14 @@ src/
 - Keep final answer generation in project agent code for strict JSON output and reproducible evaluation.
 - Persist vector data under `data/chroma/`.
 
-### Sprint 3: Multi-agent system without memory (Placeholders)
-### Sprint 4: Full system (V2 + Short-term memory + Long-term memory) (Placeholders)
+### Sprint 3: LangGraph RAG Workflow
+
+- Implement a LangGraph-orchestrated version of the Sprint 2 RAG flow.
+- Keep the same retriever, prompt, LLM, parser, and evaluator metrics as Sprint 2.
+- Use a simple two-node graph:
+  - `retrieve`: retrieve evidence from the Chroma-backed medical textbook index.
+  - `answer`: answer with the existing RAG answer-generation logic.
+- Purpose: demonstrate how the retriever plugs into LangGraph before the full multi-agent workflow.
+
+### Sprint 4: Multi-agent system without memory (Placeholders)
+### Sprint 5: Full system (V2 + Short-term memory + Long-term memory) (Placeholders)
