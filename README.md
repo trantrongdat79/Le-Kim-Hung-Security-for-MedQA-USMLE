@@ -79,11 +79,22 @@ This writes `data/corpus/medrag_textbooks/textbooks.jsonl` and
 
 ### 4.b. Option 2: Download the .zip file and extract everything: Hugging Face dataset + RAG corpus (MedRAG textbooks dataset) + ingested chromadb
 
-Download the data from: https://drive.google.com/file/d/1pIQYQ7CHJPbWqNW07kff5XA3YS8ER_Bb/view?usp=sharing
+Download the data (https://drive.google.com/file/d/1pIQYQ7CHJPbWqNW07kff5XA3YS8ER_Bb/view?usp=sharing) to the root dir of the repo
 
 Extract zip file: 
 ```bash
 unzip data.zip
+```
+
+Expected project structure:
+```
+Project's root Dir: 
+
+data/
+  MedQA-USMLE-4-options/        # MedQA train/test JSONL files
+  corpus/medrag_textbooks/      # Downloaded MedRAG textbooks JSONL corpus
+  chroma/                       # Persisted Chroma vector indexes
+
 ```
 
 ## 5. Run Sprint 1 Evaluation (LLM + Prompt)
