@@ -23,7 +23,7 @@ class LLMConfig:
     api_base: str
     api_key: str
     temperature: float = 0.0
-    max_tokens: int = 512
+    max_tokens: int = 1024
 
 
 def load_llm_1_config() -> LLMConfig:

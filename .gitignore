@@ -5,6 +5,6 @@ __pycache__/
 .DS_Store
 .uv-cache/
 
-data/
-
 presentation-and-reports/
+data/
+data.zip
