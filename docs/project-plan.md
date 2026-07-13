@@ -28,18 +28,32 @@
 
 ### Project Structure
 ```text
+scripts/
+  download_medrag_textbooks.py   # Download MedRAG textbooks corpus for RAG
+
 src/
   agent/
-    med_agent.py              # Sprint 1 Medical Reasoning Agent
+    med_agent.py                # Sprint 1 direct LLM baseline
+    rag_agent.py                # Sprint 2 RAG-only agent
+    langgraph_rag_agent.py      # Sprint 3 LangGraph RAG workflow
   core/
-    config.py                 # Environment-based runtime config
-    dataset.py                # MedQA JSONL loading
-    schema.py                 # Lightweight data containers
+    config.py                   # Environment-based runtime config
+    dataset.py                  # MedQA JSONL loading
+    schema.py                   # Shared data containers and result schemas
   eval/
-    run_med_agent_eval.py     # Small evaluation runner
+    run_med_agent_eval.py       # Sprint 1 evaluation runner
+    run_rag_eval.py             # Sprint 2 RAG evaluation runner
+    run_langgraph_rag_eval.py   # Sprint 3 LangGraph RAG evaluation runner
   retrieval/
-    ingest_data.py            # Reserved for Sprint 2 RAG
-    baseline_rag.py           # Reserved for Sprint 2 RAG
+    ingest_data.py              # Embed corpus and persist Chroma index
+    ingest_data_smoke_test.py   # Embedding/ingestion smoke test
+    retrieval_test.py           # Manual retrieval quality check
+    retriever.py                # Reusable Chroma-backed evidence retriever
+
+data/
+  MedQA-USMLE-4-options/        # MedQA train/test JSONL files
+  corpus/medrag_textbooks/      # Downloaded MedRAG textbooks JSONL corpus
+  chroma/                       # Persisted Chroma vector indexes
 ```
 
 ## 3. Required System Variants

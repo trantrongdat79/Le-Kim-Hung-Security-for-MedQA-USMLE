@@ -67,8 +67,7 @@ Run a quick dataset loading check:
 uv run python -c "from src.core.dataset import load_medqa_split; print(load_medqa_split('train', limit=1)[0])"
 ```
 
-For the Sprint 2 RAG corpus, download the MedRAG textbooks dataset into
-`data/corpus/medrag_textbooks/`:
+For the Sprint 2 RAG corpus, download the MedRAG textbooks dataset into `data/corpus/medrag_textbooks/` (Optional if downloaded):
 
 ```bash
 uv run python scripts/download_medrag_textbooks.py
@@ -113,7 +112,7 @@ latency_max_seconds=18.38
 
 ## 6. Run Sprint 2 Evaluation (RAG)
 
-Run data ingestion into chromadb (might take 4-8 hours):
+Run data ingestion into chromadb (might take 4-8 hours, Optional if data/chroma/ dir existed):
 ```bash
 uv run python src/retrieval/ingest_data.py
 ```
