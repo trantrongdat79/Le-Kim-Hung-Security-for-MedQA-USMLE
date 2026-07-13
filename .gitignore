@@ -6,3 +6,5 @@ __pycache__/
 .uv-cache/
 
 presentation-and-reports/
+data/
+data.zip

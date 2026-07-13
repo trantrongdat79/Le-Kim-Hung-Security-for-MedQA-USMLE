@@ -44,6 +44,7 @@ LLM_1_API_KEY=your_openrouter_api_key_here
 ```
 
 ## 4. Dataset
+### 4.a. Option 1: Do (download) it your own: Hugging Face dataset + RAG corpus (MedRAG textbooks dataset)
 
 The project expects the Hugging Face dataset here:
 
@@ -74,7 +75,16 @@ uv run python scripts/download_medrag_textbooks.py
 ```
 
 This writes `data/corpus/medrag_textbooks/textbooks.jsonl` and
-`data/corpus/medrag_textbooks/metadata.json`. 
+`data/corpus/medrag_textbooks/metadata.json`.
+
+### 4.b. Option 2: Download the .zip file and extract everything: Hugging Face dataset + RAG corpus (MedRAG textbooks dataset) + ingested chromadb
+
+Download the data from: https://drive.google.com/file/d/1pIQYQ7CHJPbWqNW07kff5XA3YS8ER_Bb/view?usp=sharing
+
+Extract zip file: 
+```bash
+unzip data.zip
+```
 
 ## 5. Run Sprint 1 Evaluation (LLM + Prompt)
 
@@ -112,7 +122,7 @@ latency_max_seconds=18.38
 
 ## 6. Run Sprint 2 Evaluation (RAG)
 
-Run data ingestion into chromadb (might take 4-8 hours, Optional if data/chroma/ dir existed):
+Run data ingestion into chromadb (might take 4-8 hours) (Skip if you downloaded and extracted the data.zip file in 4.b):
 ```bash
 uv run python src/retrieval/ingest_data.py
 ```
